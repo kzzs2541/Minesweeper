@@ -1,21 +1,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <time.h>
 #include "operands.h"
 
-int main(int argc, char **argv)
+int main()
 {
+    srand(time(NULL));
     system("clear");
     int width, height, mines;
-    printf("Podaj poziom trudności: 1 - łatwy; 2 - średni; 3 - trudny\n");
+    bool validPick = false;
     int x;
-    scanf("%d", &x);
-    while(!(x == 1 || x == 2 || x == 3))
-    {
-        system("clear");
+
+    do{
         printf("Podaj poziom trudności: 1 - łatwy; 2 - średni; 3 - trudny\n");
-        scanf("%d", &x);
-    }
+        if(scanf("%d", &x) == 1)
+        {
+            if(x >=1 && x <=3)
+            validPick = true;
+        }
+        system("clear");   
+    }while(!validPick);
+    
     if(x == 1)
     {
         width = 9;
@@ -32,11 +38,22 @@ int main(int argc, char **argv)
     {
         width = 30;
         height = 16;
-         mines = 99;
+        mines = 99;
     }
 
-    tile *playField = createTiles(width, height);
+    tile **playField = createTiles(width, height);
 
+
+    placeMines(width, height, mines, playField);
+
+    printBoard(height, width, playField);
+
+    revealMines(width, height, playField);
+
+    for(int i = 0; i < height; i++)
+    {
+        free(playField[i]);
+    }
     free(playField);
     
 }
