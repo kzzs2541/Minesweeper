@@ -1,0 +1,9 @@
+Podstawowa zasada dzialania programu:
+1. Wybierz poziom trudności, latwy - 9x9, 10 min
+                             sredni - 16x16, 40 min
+                             trudny - 30x16, 99 min
+wybranie poziomu trudności odbywa sie za pomocą wpisania numeru odpowiadającego poziomowi a zatwierdzenie enter
+
+2. Wykonywanie ruchu
+Pole możesz odkryc wpisując r x y, gdzie x i y to wspolrzedne pola ktore chcesz odkryc
+Pole możesz zaznaczyć flagą wpisując f x y, x i y tak samo jak poprzednio
