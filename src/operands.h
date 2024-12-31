@@ -20,6 +20,8 @@ void revealMines(int width, int height, tile **playField);
 
 int checkGameStatus(int width, int height, int mines,  tile **playField);
 
-void printFullBoard(int height, int width, tile **playField);
+void revealEmptyTiles(int width, int height, tile **playField, int x, int y);
+
+int score(int width, int height, tile **playField, int multiplier);
 
 #endif
