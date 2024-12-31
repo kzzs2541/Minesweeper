@@ -1,7 +1,11 @@
+Jak uruchomić?
+w folderze glownym Minesweeper wpisz komende make test
+
 Podstawowa zasada dzialania programu:
 1. Wybierz poziom trudności, latwy - 9x9, 10 min
                              sredni - 16x16, 40 min
                              trudny - 30x16, 99 min
+                             custom - gracz wpisuje szerokosc, wysokosc i ilosc min
 wybranie poziomu trudności odbywa sie za pomocą wpisania numeru odpowiadającego poziomowi a zatwierdzenie enter
 
 2. Wykonywanie ruchu
