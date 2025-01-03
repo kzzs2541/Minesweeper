@@ -11,3 +11,25 @@ wybranie poziomu trudności odbywa sie za pomocą wpisania numeru odpowiadające
 2. Wykonywanie ruchu
 Pole możesz odkryc wpisując r x y, gdzie x i y to wspolrzedne pola ktore chcesz odkryc
 Pole możesz zaznaczyć flagą wpisując f x y, x i y tak samo jak poprzednio
+
+3. Wczytywanie planszy z pliku
+Jesli chcesz wczytac plansze i ruchy z pliku, uzyj flagi -f nazwa_pliku przy wywolaniu pliku wykonywalnego
+Przykladowy plik z plansza:
+9 9 10		  <- Pierwsza linijka zawiera szerokosc, wysokosc i liczbe min
+0 0 0 0 0 0 0 0 0 <- Kolejne linijki zawieraja plansze, gdzie 0 to puste pole a 1 to mina
+0 0 0 1 0 0 0 0 0
+0 1 0 0 0 1 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 1 0 0 0 1 0
+0 0 0 0 0 0 0 0 0
+0 1 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+r 1 1		  <- Na koncu zawarte sa ruchy, w takim samym formacie jak przy podawaniu przez uzytkownika
+r 2 3
+f 3 3
+r 5 5
+r 3 6
+
+Po wczytaniu pliku program wykona symulacje i zwroci informacje czy udalo sie rozwiazac plansze, czy nie
+	
