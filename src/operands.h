@@ -12,6 +12,8 @@ typedef struct tile{
 
 tile **createTiles(int width, int height);
 
+tile **getBoard(const char *filename, int *width, int *height, int *mines, int *gameStatus);
+
 void printBoard(int height, int width, tile **playField);
 
 void placeMines(int width, int height, int mines, tile **playField, int x, int y);
@@ -23,5 +25,11 @@ int checkGameStatus(int width, int height, int mines,  tile **playField);
 void revealEmptyTiles(int width, int height, tile **playField, int x, int y);
 
 int score(int width, int height, tile **playField, int multiplier);
+
+void saveScore(const char *name, int score);
+
+void endGame(int currentScore);
+
+void displayLeaderboard();
 
 #endif
