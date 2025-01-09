@@ -6,14 +6,13 @@
 #include <unistd.h>
 #include "operands.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
     srand(time(NULL));
     system("clear");
     int width, height, mines, currentScore, multiplier;
     bool validPick = false;
     int mode;
-
 
     int opt;
     char *filename = NULL;
@@ -22,11 +21,11 @@ int main(int argc, char *argv[])
     {
         switch (opt)
         {
-            case 'f':
-                filename = optarg;
+        case 'f':
+            filename = optarg;
             break;
-            default:
-                fprintf(stderr, "Poprawne użycie: %s [-f <filename>]\n", argv[0]);
+        default:
+            fprintf(stderr, "Poprawne użycie: %s [-f <filename>]\n", argv[0]);
             return EXIT_FAILURE;
         }
     }
@@ -38,8 +37,6 @@ int main(int argc, char *argv[])
         int gameStatus;
         tile **playField = getBoard(filename, &width, &height, &mines, &gameStatus);
 
-
-
         if (!playField)
             return EXIT_FAILURE;
 
@@ -50,19 +47,19 @@ int main(int argc, char *argv[])
         else
             printf("\nDla podanych ruchów gra się nie zakończyła.\n");
 
-        //printf("Stan planszy po wykonaniu wszystkich ruchów z pliku:\n\n");
-        //printBoard(height,width,playField);
+        // printf("Stan planszy po wykonaniu wszystkich ruchów z pliku:\n\n");
+        // printBoard(height,width,playField);
 
         for (int i = 0; i < height; i++)
             free(playField[i]);
         free(playField);
     }
-    else
+    else // tryb gracza
     {
 
         do
         {
-            printf("Podaj poziom trudności: 1 - łatwy; 2 - średni; 3 - trudny; 4 - custom\n");
+            printf("Podaj poziom trudności: 1 - łatwy; 2 - średni; 3 - trudny; 4 - custom\n"); // podanie poziomu trudnosci gracza - do momentu az poda wlasciwy wybor
             if (scanf("%d", &mode) == 1)
             {
                 if (mode >= 1 && mode <= 4)
@@ -77,7 +74,7 @@ int main(int argc, char *argv[])
         } while (!validPick);
         validPick = false;
 
-        if (mode == 1)
+        if (mode == 1) // zapisanie ustawien planszy dla danego poziomu trudności
         {
             width = 9;
             height = 9;
@@ -98,7 +95,7 @@ int main(int argc, char *argv[])
             mines = 99;
             multiplier = 3;
         }
-        else
+        else // customowa plansza - nie liczona do wynikow
         {
             do
             {
@@ -117,16 +114,17 @@ int main(int argc, char *argv[])
             } while (!validPick);
             validPick = false;
 
-            multiplier = 4; //do przemyslenia
+            multiplier = 0;
         }
 
-        tile **playField = createTiles(width, height);
+        tile **playField = createTiles(width, height); // inicjalizacja pola gry
 
         // pierwszy input - unikniecie odkrycia miny w pierwszym ruchu
         while (getchar() != '\n')
             ;
         char action;
         int x, y;
+        
         do
         {
             printBoard(height, width, playField);
@@ -149,24 +147,25 @@ int main(int argc, char *argv[])
             system("clear");
         } while (!validPick);
 
-        if (action == 'f')
+        // operacje pierwszego ruchu - miny nie są jeszcze wygenerowane, wiec nie natrafimy w pierwszym ruchu na mine
+        if (action == 'f') //flagowanie pola
         {
             playField[y - 1][x - 1].isFlagged = !playField[y - 1][x - 1].isFlagged;
         }
-        else if (action == 'r')
+        else if (action == 'r') //odkrycie pola
         {
             playField[y - 1][x - 1].isRevealed = !playField[y - 1][x - 1].isRevealed;
         }
-        placeMines(width, height, mines, playField, x - 1, y - 1);
+        placeMines(width, height, mines, playField, x - 1, y - 1); //generowanie min na planszy
 
         while (getchar() != '\n')
             ;
-        if (action == 'r')
+        if (action == 'r') //jezeli pierwsza akcja to odkrycie pola to rekurencyjnie odkrywamy puste pola wokol
         {
             revealEmptyTiles(width, height, playField, x - 1, y - 1);
         }
 
-        while (checkGameStatus(width, height, mines, playField) == 0)
+        while (checkGameStatus(width, height, mines, playField) == 0) //rozpoczęcie wlasciwej rozgrywki - do momentu az nie natrafimy na minę lub nie odkryjemy wszystkich pol
         {
             // dajemy ruch
             do
@@ -174,11 +173,11 @@ int main(int argc, char *argv[])
                 validPick = false;
                 system("clear");
                 currentScore = score(width, height, playField, multiplier);
-                printf("Current score: %d\n", currentScore);
+                printf("Current score: %d\n", currentScore); //wyswietlenie aktualnego wyniku gracza
                 printf("\n");
-                printBoard(height, width, playField);
+                printBoard(height, width, playField); //wyswietlenie aktualnego stanu planszy
                 printf("Podaj ruch: ");
-                if (scanf("%c %d %d", &action, &x, &y) == 3)
+                if (scanf("%c %d %d", &action, &x, &y) == 3) //czytanie planszy do momentu otrzymania prawidlowego wejscia
                 {
                     if (action == 'f' && x > 0 && x <= width && y > 0 && y <= height && !playField[y - 1][x - 1].isRevealed)
                         validPick = true;
@@ -199,6 +198,7 @@ int main(int argc, char *argv[])
             } while (!validPick);
             while (getchar() != '\n')
                 ;
+            //wykonanie operacji na planszy
             if (action == 'f')
             {
                 playField[y - 1][x - 1].isFlagged = !playField[y - 1][x - 1].isFlagged;
@@ -211,18 +211,25 @@ int main(int argc, char *argv[])
             else
                 playField[y - 1][x - 1].isRevealed = true;
         }
-        currentScore = score(width, height, playField, multiplier);
-        if (checkGameStatus(width, height, mines, playField) == 2)
+
+        currentScore = score(width, height, playField, multiplier); //obliczenie ostatecznego wyniku gracza
+        if (checkGameStatus(width, height, mines, playField) == 2) //rezultat gracza po natrafieniu na mine
         {
-            revealMines(width, height, playField);
+            revealMines(width, height, playField); //wyswietlenie planszy z ujawnionymi pozycjami min
             printf("Game over\n");
-            endGame(currentScore);
+            if(mode != 4)
+                endGame(currentScore);
+            else 
+                displayLeaderboard();
         }
         else if (checkGameStatus(width, height, mines, playField) == 1)
         {
             printBoard(height, width, playField);
-            printf("Gratulacje!!!");
-            endGame(currentScore);
+            printf("Gratulacje!!!\n");
+            if(mode != 4)
+                endGame(currentScore);
+            else
+                displayLeaderboard();
         }
 
         for (int i = 0; i < height; i++)
@@ -232,4 +239,3 @@ int main(int argc, char *argv[])
         free(playField);
     }
 }
-
