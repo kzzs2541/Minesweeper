@@ -8,15 +8,15 @@
 #define MAX_TOP_SCORES 5
 #define LEADERBOARD_FILE "src/leaderboard.txt"
 
-tile **createTiles(int width, int height) //struktura planszy
+tile **createTiles(int width, int height) // struktura planszy
 {
-    tile **playField = malloc(height * sizeof(tile *)); //rezerwowanie pamieci dla pol
+    tile **playField = malloc(height * sizeof(tile *)); // rezerwowanie pamieci dla pol
     for (int i = 0; i < height; i++)
     {
         playField[i] = malloc(width * sizeof(tile));
     }
 
-    for (int i = 0; i < height; i++) //inicjalizacja pol - czysta plansza
+    for (int i = 0; i < height; i++) // inicjalizacja pol - czysta plansza
     {
         for (int j = 0; j < width; j++)
         {
@@ -29,9 +29,9 @@ tile **createTiles(int width, int height) //struktura planszy
     return playField;
 }
 
-void printBoard(int height, int width, tile **playField) //funkcja wyswietlająca aktualny stan planszy
+void printBoard(int height, int width, tile **playField) // funkcja wyswietlająca aktualny stan planszy
 {
-    printf("  "); //numeracja kolumn
+    printf("  "); // numeracja kolumn
     for (int i = 1; i <= width; i++)
     {
         if (i > 10)
@@ -49,19 +49,19 @@ void printBoard(int height, int width, tile **playField) //funkcja wyswietlając
         }
         for (int j = 0; j < width; j++)
         {
-            if (!playField[i][j].isRevealed && playField[i][j].isFlagged) //wyswietlanie oflagowanych pol
+            if (!playField[i][j].isRevealed && playField[i][j].isFlagged) // wyswietlanie oflagowanych pol
             {
                 printf(" X ");
             }
-            else if (playField[i][j].isRevealed && playField[i][j].minesAround == 0) //wyswietlanie pustych odkrytych pol
+            else if (playField[i][j].isRevealed && playField[i][j].minesAround == 0) // wyswietlanie pustych odkrytych pol
             {
                 printf(" □ ");
             }
-            else if (playField[i][j].isRevealed && playField[i][j].minesAround != 0) //wyswietlanie odkrytych pol wokol min
+            else if (playField[i][j].isRevealed && playField[i][j].minesAround != 0) // wyswietlanie odkrytych pol wokol min
             {
                 printf(" %d ", playField[i][j].minesAround);
             }
-            else if (!playField[i][j].isRevealed) //wyswietlanie nieodkrytych pol
+            else if (!playField[i][j].isRevealed) // wyswietlanie nieodkrytych pol
             {
                 printf(" ■ ");
             }
@@ -70,11 +70,11 @@ void printBoard(int height, int width, tile **playField) //funkcja wyswietlając
     }
 }
 
-void placeMines(int width, int height, int mines, tile **playField, int x, int y) //funkcja inicjalizująca miny
+void placeMines(int width, int height, int mines, tile **playField, int x, int y) // funkcja inicjalizująca miny
 {
     int placedMines = 0;
     int pickX, pickY;
-    while (placedMines < mines) //umieszczanie min losowo
+    while (placedMines < mines) // umieszczanie min losowo
     {
         pickX = rand() % width;
         pickY = rand() % height;
@@ -85,123 +85,17 @@ void placeMines(int width, int height, int mines, tile **playField, int x, int y
         }
     }
 
-    for (int i = 0; i < height; i++) //funkcja zliczająca miny wokol pola
+    for (int i = 0; i < height; i++) // funkcja zliczająca miny wokol pola
     {
         for (int j = 0; j < width; j++)
         {
             if (!playField[i][j].isMine)
             {
-                // rogi (warunki zeby zapobiec wyjsciu poza obszar tablicy)
-                if (i == 0 && j == 0)
+                for (int k = -1; k <= 1; k++) // petla sprawdzająca pola wokol aktualnie sprawdzanego
                 {
-                    for (int k = 0; k <= 1; k++)
+                    for (int l = -1; l <= 1; l++)
                     {
-                        for (int l = 0; l <= 1; l++)
-                        {
-                            if (playField[i + k][j + l].isMine)
-                            {
-                                playField[i][j].minesAround++;
-                            }
-                        }
-                    }
-                }
-                else if (i == 0 && j == width - 1)
-                {
-                    for (int k = 0; k <= 1; k++)
-                    {
-                        for (int l = -1; l <= 0; l++)
-                        {
-                            if (playField[i + k][j + l].isMine)
-                            {
-                                playField[i][j].minesAround++;
-                            }
-                        }
-                    }
-                }
-                else if (i == height - 1 && j == 0)
-                {
-                    for (int k = -1; k <= 0; k++)
-                    {
-                        for (int l = 0; l <= 1; l++)
-                        {
-                            if (playField[i + k][j + l].isMine)
-                            {
-                                playField[i][j].minesAround++;
-                            }
-                        }
-                    }
-                }
-                else if (i == height - 1 && j == width - 1)
-                {
-                    for (int k = -1; k <= 0; k++)
-                    {
-                        for (int l = -1; l <= 0; l++)
-                        {
-                            if (playField[i + k][j + l].isMine)
-                            {
-                                playField[i][j].minesAround++;
-                            }
-                        }
-                    }
-                }
-                // krawedzie
-                else if (i == 0)
-                {
-                    for (int k = 0; k <= 1; k++)
-                    {
-                        for (int l = -1; l <= 1; l++)
-                        {
-                            if (playField[i + k][j + l].isMine)
-                            {
-                                playField[i][j].minesAround++;
-                            }
-                        }
-                    }
-                }
-                else if (i == height - 1)
-                {
-                    for (int k = -1; k <= 0; k++)
-                    {
-                        for (int l = -1; l <= 1; l++)
-                        {
-                            if (playField[i + k][j + l].isMine)
-                            {
-                                playField[i][j].minesAround++;
-                            }
-                        }
-                    }
-                }
-                else if (j == 0)
-                {
-                    for (int k = -1; k <= 1; k++)
-                    {
-                        for (int l = 0; l <= 1; l++)
-                        {
-                            if (playField[i + k][j + l].isMine)
-                            {
-                                playField[i][j].minesAround++;
-                            }
-                        }
-                    }
-                }
-                else if (j == width - 1)
-                {
-                    for (int k = -1; k <= 1; k++)
-                    {
-                        for (int l = -1; l <= 0; l++)
-                        {
-                            if (playField[i + k][j + l].isMine)
-                            {
-                                playField[i][j].minesAround++;
-                            }
-                        }
-                    }
-                }
-                else // reszta pol
-                {
-                    for (int k = -1; k <= 1; k++)
-                    {
-                        for (int l = -1; l <= 1; l++)
+                        if (i + k >= 0 && i + k < height && j + l >= 0 && j + l < width) // zabezpieczenie przed wyjsciem poza zakres tablicy
                         {
                             if (playField[i + k][j + l].isMine)
                             {
@@ -215,7 +109,7 @@ void placeMines(int width, int height, int mines, tile **playField, int x, int y
     }
 }
 
-void revealMines(int width, int height, tile **playField) //funkcja wyswietlająca planszę z odkrytymi minami - po przegraniu
+void revealMines(int width, int height, tile **playField) // funkcja wyswietlająca planszę z odkrytymi minami - po przegraniu
 {
     printf("  ");
     for (int i = 1; i <= width; i++)
@@ -260,124 +154,57 @@ void revealMines(int width, int height, tile **playField) //funkcja wyswietlają
     }
 }
 
-int checkGameStatus(int width, int height, int mines, tile **playField) //sprawdzanie aktualnego statusu gry
+int checkGameStatus(int width, int height, int mines, tile **playField) // sprawdzanie aktualnego statusu gry
 {
     int tilesRevealed = 0;
-    for (int i = 0; i < height; i++) //przechodzi po wszystkich polach
+    for (int i = 0; i < height; i++) // przechodzi po wszystkich polach
     {
         for (int j = 0; j < width; j++)
         {
-            if (playField[i][j].isRevealed) //zlicza odkryte pola
+            if (playField[i][j].isRevealed) // zlicza odkryte pola
                 tilesRevealed++;
 
-            if (playField[i][j].isRevealed && playField[i][j].isMine) //odkryto mine - rozgrywka sie konczy
-                return 2; // odkryto mine - przegrana
+            if (playField[i][j].isRevealed && playField[i][j].isMine) // odkryto mine - rozgrywka sie konczy
+                return 2;                                             // odkryto mine - przegrana
         }
     }
-    if (tilesRevealed == width * height - mines) //odkryto wszystkie pola poza minami - wygrana
+    if (tilesRevealed == width * height - mines) // odkryto wszystkie pola poza minami - wygrana
     {
         return 1; // wygrana
     }
-    if (tilesRevealed < width * height - mines) //nie odkryto jeszcze wszystkich pol - rozgrywka jest kontynuowana
+    if (tilesRevealed < width * height - mines) // nie odkryto jeszcze wszystkich pol - rozgrywka jest kontynuowana
     {
         return 0; // gra sie nie skonczyla - kontynuuj
     }
 }
 
-void revealEmptyTiles(int width, int height, tile **playField, int x, int y) //rekurencyjne odkrywanie pustych pol
+void revealEmptyTiles(int width, int height, tile **playField, int x, int y) // rekurencyjne odkrywanie pustych pol
 {
-    //sprawdza wszystkie pola wokol wybranego w funkcji
-    if (!playField[y][x].isMine)
+    // sprawdza wszystkie pola wokol wybranego w funkcji
+    if (!playField[y][x].isMine && playField[y][x].minesAround == 0) //odkrywamy rekurencyjnie pola tylko w rpzypadku gdy pole nie ma zadnej wartosci, tj nie jest miną i nie ma min wokol
     {
-        // gorny
-        if (y - 1 >= 0 && !playField[y - 1][x].isMine && !playField[y - 1][x].isRevealed)
+        for (int i = -1; i <= 1; i++)
         {
-            if (playField[y - 1][x].minesAround > 0) //jezeli pole jest oznaczone cyfra, tj ma wokol miny to tylko je odkrywa
+            for (int j = -1; j <= 1; j++)
             {
-                playField[y - 1][x].isRevealed = true;
-            }
-            else //jezeli pole jest puste to je odkrywa i wywoluje na nim funkcje
-            {
-                playField[y - 1][x].isRevealed = true;
-                revealEmptyTiles(width, height, playField, x, y - 1);
-            }
-        }
-        // prawy
-        if (x + 1 < width && !playField[y][x + 1].isMine && !playField[y][x + 1].isRevealed)
-        {
-            if (playField[y][x + 1].minesAround > 0)
-            {
-                playField[y][x + 1].isRevealed = true;
-            }
-            else
-            {
-                playField[y][x + 1].isRevealed = true;
-                revealEmptyTiles(width, height, playField, x + 1, y);
-            }
-        }
-        // dolny
-        if (y + 1 < height && !playField[y + 1][x].isMine && !playField[y + 1][x].isRevealed)
-        {
-            if (playField[y + 1][x].minesAround > 0)
-            {
-                playField[y + 1][x].isRevealed = true;
-            }
-            else
-            {
-                playField[y + 1][x].isRevealed = true;
-                revealEmptyTiles(width, height, playField, x, y + 1);
-            }
-        }
-        // lewy
-        if (x - 1 >= 0 && !playField[y][x - 1].isMine && !playField[y][x - 1].isRevealed)
-        {
-            if (playField[y][x - 1].minesAround > 0)
-            {
-                playField[y][x - 1].isRevealed = true;
-            }
-            else
-            {
-                playField[y][x - 1].isRevealed = true;
-                revealEmptyTiles(width, height, playField, x - 1, y);
-            }
-        }
-        //dla pol skosnych tylko odkrywa pole, nie kontynuuje rekurencyjnego odkrywania
-        // lewy gorny
-        if (x - 1 >= 0 && y - 1 >= 0 && !playField[y - 1][x - 1].isMine && !playField[y - 1][x - 1].isRevealed)
-        {
-            if (playField[y - 1][x - 1].minesAround > 0)
-            {
-                playField[y - 1][x - 1].isRevealed = true;
-            }
-        }
-        // prawy gorny
-        if (x + 1 < width && y - 1 >= 0 && !playField[y - 1][x + 1].isMine && !playField[y - 1][x + 1].isRevealed)
-        {
-            if (playField[y - 1][x + 1].minesAround > 0)
-            {
-                playField[y - 1][x + 1].isRevealed = true;
-            }
-        }
-        // lewy dolny
-        if (x - 1 >= 0 && y + 1 < height && !playField[y + 1][x - 1].isMine && !playField[y + 1][x - 1].isRevealed)
-        {
-            if (playField[y + 1][x - 1].minesAround > 0)
-            {
-                playField[y + 1][x - 1].isRevealed = true;
-            }
-        }
-        // prawy dolny
-        if (x + 1 < width && y + 1 < height && !playField[y + 1][x + 1].isMine && !playField[y + 1][x + 1].isRevealed)
-        {
-            if (playField[y + 1][x + 1].minesAround > 0)
-            {
-                playField[y + 1][x + 1].isRevealed = true;
+                if (i + y >= 0 && i + y < height && j + x >= 0 && j + x < width && !playField[y + i][x + j].isMine && !playField[y + i][x + j].isRevealed)
+                {
+                    if (playField[y + i][x + j].minesAround > 0) // jezeli pole jest oznaczone cyfra, tj ma wokol miny to tylko je odkrywa
+                    {
+                        playField[y + i][x + j].isRevealed = true;
+                    }
+                    else // jezeli pole jest puste to je odkrywa i wywoluje na nim funkcje
+                    {
+                        playField[y + i][x + j].isRevealed = true;
+                        revealEmptyTiles(width, height, playField, x + j, y + i);
+                    }
+                }
             }
         }
     }
 }
 
-int score(int width, int height, tile **playField, int multiplier) //funkcja obliczająca wynik gracza na podstawie mnożnika trudnosci i ilosci odkrytych pol
+int score(int width, int height, tile **playField, int multiplier) // funkcja obliczająca wynik gracza na podstawie mnożnika trudnosci i ilosci odkrytych pol
 {
     int score = 0;
     for (int i = 0; i < height; i++)
@@ -400,7 +227,7 @@ void endGame(int currentScore)
     printf("\nPodaj swój nick: ");
     fgets(name, MAX_NAME_LENGTH, stdin);
 
-    //usuniecie znaku nowej linii z podanego nicku
+    // usuniecie znaku nowej linii z podanego nicku
     size_t length = strlen(name);
     if (length > 0 && name[length - 1] == '\n')
     {
@@ -448,7 +275,7 @@ void displayLeaderboard()
 
     fclose(file);
 
-    //Sortowanie wyników
+    // Sortowanie wyników
     for (int i = 0; i < count - 1; i++)
     {
         for (int j = 0; j < count - i - 1; j++)
@@ -499,7 +326,7 @@ tile **getBoard(const char *filename, int *width, int *height, int *mines, int *
         {
             int isMine;
             fscanf(file, "%d", &isMine);
-            if(isMine==1)
+            if (isMine == 1)
                 playField[i][j].isMine = true;
             else
                 playField[i][j].isMine = false;
