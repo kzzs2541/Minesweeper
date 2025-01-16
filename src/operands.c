@@ -63,7 +63,7 @@ void printBoard(int height, int width, tile **playField) // funkcja wyswietlaj¹c
             }
             else if (!playField[i][j].isRevealed) // wyswietlanie nieodkrytych pol
             {
-                printf(" ¦ ");
+                printf(" ? ");
             }
         }
         printf("\n");
@@ -147,7 +147,7 @@ void revealMines(int width, int height, tile **playField) // funkcja wyswietlaj¹
             }
             else if (!playField[i][j].isRevealed)
             {
-                printf(" ¦ ");
+                printf(" ? ");
             }
         }
         printf("\n");
@@ -335,7 +335,10 @@ tile **getBoard(const char *filename, int *width, int *height, int *mines, int *
 
     char action;
     int x, y;
+    int revealedTiles=0;
+    int freeTiles=*height * *width;
     *gameStatus = 0;
+    freeTiles -= *mines;
 
     while (fscanf(file, " %c %d %d", &action, &x, &y) == 3)
     {
@@ -350,21 +353,15 @@ tile **getBoard(const char *filename, int *width, int *height, int *mines, int *
                 *gameStatus = 2; // Pora¿ka
                 break;
             }
-            else if (playField[y - 1][x - 1].minesAround == 0)
-            {
-                playField[y - 1][x - 1].isRevealed = true;
-                revealEmptyTiles(*width, *height, playField, x - 1, y - 1);
-            }
             else
             {
                 playField[y - 1][x - 1].isRevealed = true;
+                revealedTiles++;
             }
         }
-
-        int status = checkGameStatus(*width, *height, *mines, playField);
-        if (status != 0)
+        if (revealedTiles==freeTiles)
         {
-            *gameStatus = status;
+            *gameStatus = 1; //Wygrana
             break;
         }
     }
