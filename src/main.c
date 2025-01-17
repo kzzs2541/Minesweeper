@@ -5,13 +5,11 @@
 #include <string.h>
 #include <unistd.h>
 #include "operands.h"
-#include <windows.h>
-#include <locale.h>
 
 int main(int argc, char **argv)
 {
     srand(time(NULL));
-    //  system("clear");
+    system("clear");
     int width, height, mines, currentScore, multiplier;
     bool validPick = false;
     int mode;
