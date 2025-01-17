@@ -29,7 +29,7 @@ tile **createTiles(int width, int height) // struktura planszy
     return playField;
 }
 
-void printBoard(int height, int width, tile **playField) // funkcja wyswietlaj¹ca aktualny stan planszy
+void printBoard(int height, int width, tile **playField) // funkcja wyswietlajï¿½ca aktualny stan planszy
 {
     printf("  "); // numeracja kolumn
     for (int i = 1; i <= width; i++)
@@ -55,7 +55,7 @@ void printBoard(int height, int width, tile **playField) // funkcja wyswietlaj¹c
             }
             else if (playField[i][j].isRevealed && playField[i][j].minesAround == 0) // wyswietlanie pustych odkrytych pol
             {
-                printf(" ? ");
+                printf(" â–¡ ");
             }
             else if (playField[i][j].isRevealed && playField[i][j].minesAround != 0) // wyswietlanie odkrytych pol wokol min
             {
@@ -63,14 +63,14 @@ void printBoard(int height, int width, tile **playField) // funkcja wyswietlaj¹c
             }
             else if (!playField[i][j].isRevealed) // wyswietlanie nieodkrytych pol
             {
-                printf(" ? ");
+                printf(" â–  ");
             }
         }
         printf("\n");
     }
 }
 
-void placeMines(int width, int height, int mines, tile **playField, int x, int y) // funkcja inicjalizuj¹ca miny
+void placeMines(int width, int height, int mines, tile **playField, int x, int y) // funkcja inicjalizujï¿½ca miny
 {
     int placedMines = 0;
     int pickX, pickY;
@@ -85,13 +85,13 @@ void placeMines(int width, int height, int mines, tile **playField, int x, int y
         }
     }
 
-    for (int i = 0; i < height; i++) // funkcja zliczaj¹ca miny wokol pola
+    for (int i = 0; i < height; i++) // funkcja zliczajï¿½ca miny wokol pola
     {
         for (int j = 0; j < width; j++)
         {
             if (!playField[i][j].isMine)
             {
-                for (int k = -1; k <= 1; k++) // petla sprawdzaj¹ca pola wokol aktualnie sprawdzanego
+                for (int k = -1; k <= 1; k++) // petla sprawdzajï¿½ca pola wokol aktualnie sprawdzanego
                 {
                     for (int l = -1; l <= 1; l++)
                     {
@@ -109,7 +109,7 @@ void placeMines(int width, int height, int mines, tile **playField, int x, int y
     }
 }
 
-void revealMines(int width, int height, tile **playField) // funkcja wyswietlaj¹ca planszê z odkrytymi minami - po przegraniu
+void revealMines(int width, int height, tile **playField) // funkcja wyswietlajï¿½ca planszï¿½ z odkrytymi minami - po przegraniu
 {
     printf("  ");
     for (int i = 1; i <= width; i++)
@@ -139,7 +139,7 @@ void revealMines(int width, int height, tile **playField) // funkcja wyswietlaj¹
             }
             else if (playField[i][j].isRevealed && playField[i][j].minesAround == 0)
             {
-                printf(" ? ");
+                printf(" â–¡ ");
             }
             else if (playField[i][j].isRevealed && playField[i][j].minesAround != 0)
             {
@@ -147,7 +147,7 @@ void revealMines(int width, int height, tile **playField) // funkcja wyswietlaj¹
             }
             else if (!playField[i][j].isRevealed)
             {
-                printf(" ? ");
+                printf(" â–  ");
             }
         }
         printf("\n");
@@ -181,7 +181,7 @@ int checkGameStatus(int width, int height, int mines, tile **playField) // spraw
 void revealEmptyTiles(int width, int height, tile **playField, int x, int y) // rekurencyjne odkrywanie pustych pol
 {
     // sprawdza wszystkie pola wokol wybranego w funkcji
-    if (!playField[y][x].isMine && playField[y][x].minesAround == 0) //odkrywamy rekurencyjnie pola tylko w rpzypadku gdy pole nie ma zadnej wartosci, tj nie jest min¹ i nie ma min wokol
+    if (!playField[y][x].isMine && playField[y][x].minesAround == 0) //odkrywamy rekurencyjnie pola tylko w rpzypadku gdy pole nie ma zadnej wartosci, tj nie jest minï¿½ i nie ma min wokol
     {
         for (int i = -1; i <= 1; i++)
         {
@@ -204,7 +204,7 @@ void revealEmptyTiles(int width, int height, tile **playField, int x, int y) // 
     }
 }
 
-int score(int width, int height, tile **playField, int multiplier) // funkcja obliczaj¹ca wynik gracza na podstawie mno¿nika trudnosci i ilosci odkrytych pol
+int score(int width, int height, tile **playField, int multiplier) // funkcja obliczajï¿½ca wynik gracza na podstawie mnoï¿½nika trudnosci i ilosci odkrytych pol
 {
     int score = 0;
     for (int i = 0; i < height; i++)
@@ -223,8 +223,8 @@ int score(int width, int height, tile **playField, int multiplier) // funkcja ob
 void endGame(int currentScore)
 {
     char name[MAX_NAME_LENGTH];
-    printf("Wynik koñcowy: %d\n", currentScore);
-    printf("\nPodaj swój nick: ");
+    printf("Wynik koncowy: %d\n", currentScore);
+    printf("\nPodaj swoj nick: ");
     fgets(name, MAX_NAME_LENGTH, stdin);
 
     // usuniecie znaku nowej linii z podanego nicku
@@ -235,7 +235,7 @@ void endGame(int currentScore)
     }
 
     saveScore(name, currentScore);
-    printf("Twój wynik zosta³ zapisany!\n");
+    printf("Twoj wynik zostal zapisany!\n");
     printf("\n");
     displayLeaderboard();
 }
@@ -245,7 +245,7 @@ void saveScore(const char *name, int score)
     FILE *file = fopen(LEADERBOARD_FILE, "a");
     if (file == NULL)
     {
-        perror("Nie uda³o siê otworzyæ pliku z wynikami");
+        perror("Nie udalo sie otworzyc pliku z wynikami");
         return;
     }
     fprintf(file, "%s %d\n", name, score);
@@ -257,7 +257,7 @@ void displayLeaderboard()
     FILE *file = fopen(LEADERBOARD_FILE, "r");
     if (file == NULL)
     {
-        perror("Nie uda³o siê otworzyæ pliku z wynikami");
+        perror("Nie udalo sie otworzyc pliku z wynikami");
         return;
     }
 
@@ -275,7 +275,7 @@ void displayLeaderboard()
 
     fclose(file);
 
-    // Sortowanie wyników
+    // Sortowanie wynikï¿½w
     for (int i = 0; i < count - 1; i++)
     {
         for (int j = 0; j < count - i - 1; j++)
@@ -292,7 +292,7 @@ void displayLeaderboard()
     printf("Najlepsze %d Graczy:\n", MAX_TOP_SCORES);
     for (int i = 0; i < count && i < MAX_TOP_SCORES; i++)
     {
-        printf("%d. %s » %dpkt\n", i + 1, scores[i].name, scores[i].score);
+        printf("%d. %s >> %dpkt\n", i + 1, scores[i].name, scores[i].score);
     }
 }
 
@@ -301,19 +301,19 @@ tile **getBoard(const char *filename, int *width, int *height, int *mines, int *
     FILE *file = fopen(filename, "r");
     if (!file)
     {
-        printf("Nie uda³o siê otworzyæ pliku z plansz¹.\n");
+        printf("Nie udalo sie otworzyc pliku z plansza.\n");
         return NULL;
     }
 
     if (fscanf(file, "%d %d", width, height) != 2)
     {
-        printf("B³¹d podczas wczytywania rozmiarów planszy.\n");
+        printf("Blad podczas wczytywania rozmiarow planszy.\n");
         fclose(file);
         return NULL;
     }
     if (fscanf(file, "%d", mines) != 1)
     {
-        printf("B³¹d podczas wczytywania liczby min.\n");
+        printf("Blad podczas wczytywania liczby min.\n");
         fclose(file);
         return NULL;
     }
@@ -350,7 +350,7 @@ tile **getBoard(const char *filename, int *width, int *height, int *mines, int *
         {
             if (playField[y - 1][x - 1].isMine)
             {
-                *gameStatus = 2; // Pora¿ka
+                *gameStatus = 2; // Poraï¿½ka
                 break;
             }
             else
